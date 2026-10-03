@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dealer Access – Dealer Health &amp; Priority Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css"></head><body>
+<nav><b>● Dealer Access</b><div class="tabs"><button id="t0" class="on" onclick="go(0)">Approach</button><button id="t1" onclick="go(1)">Prototype</button></div></nav>
+<main>
+<!-- ============ SECTION 1: APPROACH ============ -->
+<section class="page on" id="p0">
+<div class="eyebrow">Business Analyst Case Study</div><h1>Which dealers need<br>management attention?</h1>
+<p class="lead">Dealer Access reads monthly dealer data, uses clustering to discover hidden performance patterns, and gives regional managers a ranked list: <b>who</b> needs attention, <b>why</b>, and <b>what to do first</b>.</p>
+<p><button class="btn" onclick="go(1)">Go to the deployed solution →</button></p>
+<p class="m">The working prototype is in the next section (“Prototype” tab above).</p>
+
+<h2>Presentation</h2>
+<div class="video" id="video"><div><div style="font-size:42px">▶</div>Video presentation coming soon</div></div>
+<!-- To add: replace the inner HTML above with <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
+
+<h2>How the solution works</h2>
+<div class="grid g4">
+<div class="card"><div class="num">1</div><h3>Ingest</h3><span class="m">24 months × 150 dealers of sales, inventory, payments, service, complaints. Upload your own file anytime.</span></div>
+<div class="card"><div class="num">2</div><h3>Profile</h3><span class="m">Each dealer becomes one row: last-6-month averages plus sales momentum vs the previous 6 months.</span></div>
+<div class="card"><div class="num">3</div><h3>Cluster</h3><span class="m">K-means groups dealers by similar behaviour, so patterns surface that no single metric shows.</span></div>
+<div class="card"><div class="num">4</div><h3>Prioritise</h3><span class="m">A risk score weighted by market potential ranks dealers, explains drivers and suggests actions.</span></div></div>
+
+<h2>Assumptions</h2>
+<div class="grid g2"><div class="card"><h3>Data</h3><ul>
+<li>The manufacturer’s dealer network is in India, split into five regions: North, South, East, West and Central.</li>
+<li>Synthetic dataset: 150 dealers, 5 regions, 24 months (Jan-2024 onward), 3,600 rows.</li>
+<li>Rows are in chronological order per dealer; the latest 6 months represent “current” health.</li>
+<li>Each dealer has a fixed synthetic latitude/longitude, used for the map. Uploaded files need the same columns as the sample (map columns optional).</li>
+</ul></div>
+<div class="card"><h3>Modelling & business logic</h3><ul>
+<li>Features: sales vs target, growth, inventory ageing, payment delay, service, complaints, sales momentum.</li>
+<li>Higher is good for sales, growth, service, momentum; lower is good for the other three.</li>
+<li>Equal feature weights after z-score standardisation; k = 4 clusters (named by average health).</li>
+<li>Priority score = sum of adverse deviations × potential factor (High 1.25, Medium 1.0, Low 0.85): a weak dealer in a rich market costs more.</li>
+<li>“Emerging concern” = currently in a healthier cluster but sales momentum has dropped sharply.</li>
+<li>Model is trained on a random 80% of dealers (seeded) and tested on the held-out 20%.</li>
+<li>Suggested actions are rule-based playbooks and should be validated by regional managers.</li></ul></div></div>
+
+<h2>Tools &amp; deployment</h2>
+<div class="card"><h3>Tools used</h3><ul>
+<li><b>ChatGPT</b>: problem breakdown and synthetic dataset prompt</li>
+<li><b>Tonic Fabricate</b>: generation of synthetic dataset</li>
+<li><b>Claude</b>: problem breakdown, prototype and code generation</li>
+<li><b>HTML / CSS / vanilla JavaScript</b>: the whole app, no backend</li>
+<li><b>Chart.js</b>: visuals · <b>IBM Plex Sans</b>: typography</li>
+<li><b>K-means++ in JS</b>: runs in the browser, so uploaded data never leaves the user’s device</li>
+<li><b>GitHub + GitHub Pages</b>: version control and hosting</li></ul></div>
+<h2>Proposed production path</h2>
+<div class="card"><ul><li><b>Data:</b> connect DMS / ERP / CRM monthly feeds; automate refresh.</li><li><b>Model:</b> move clustering to Python (scikit-learn), add monitoring and managers’ feedback loop.</li><li><b>Geography:</b> extend beyond India to more countries: country-specific maps, regions, currencies and calendars, with the same model re-trained per market.</li><li><b>Product:</b> role-based views, alerts to regional managers, action tracking.</li></ul></div>
+</section>
+
+<!-- ============ SECTION 2: PROTOTYPE ============ -->
+<section class="page" id="p1">
+<div class="eyebrow">Working prototype</div>
+<div class="head"><h1 style="font-size:40px">Dealer health &amp; priorities</h1>
+<div class="ctl"><select id="rg" hidden onchange="REG=this.value;render()"></select>
+<div class="seg"><button id="m0" class="on" onclick="setMode('all')">Overall<small>For management</small></button><button id="m1" onclick="setMode('region')">Region-wise<small>For regional managers</small></button></div></div></div>
+<div class="drop"><div><b>Use your own data</b><br><span class="m">Upload a <b>.csv</b> file in the same format as the sample · <span id="src"></span></span></div>
+<input type="file" id="file" accept=".csv"><button class="btn s" onclick="document.getElementById('hdrs').hidden=!document.getElementById('hdrs').hidden">View headers</button><button class="btn s" onclick="load(SEED,'Sample dataset')">Reset to sample</button><span id="err" style="color:var(--r)"></span></div>
+<div class="card" id="hdrs" hidden><h3>Required CSV headers (one row per dealer per month, in date order)</h3><div id="hl"></div></div>
+<div class="grid g4" style="margin-top:16px" id="kpis"></div>
+
+<div class="grid g2" style="margin-top:24px;grid-template-columns:repeat(auto-fit,minmax(480px,1fr))">
+<div class="card mapc"><h3>Dealer network map</h3><button class="btn s back" id="back" hidden onclick="setMode('all')">← All India</button><svg id="mp" preserveAspectRatio="xMidYMid meet"></svg><div class="nomap" id="nomap" hidden>Add Latitude and Longitude columns to see the map.</div><div class="mapov" id="lg"></div></div>
+<div class="card"><h3>Sales vs target against inventory ageing</h3><div class="cv" style="height:520px"><canvas id="c1"></canvas></div></div>
+<div class="card"><h3>What defines each group (std. deviations vs network)</h3><div class="cv"><canvas id="c2"></canvas></div></div>
+<div class="card"><h3 id="t3"></h3><div class="cv"><canvas id="c3"></canvas></div></div></div>
+<div class="card" style="margin-top:16px"><h3>Average sales vs target by group, month by month</h3><div class="cv" style="height:340px"><canvas id="c5"></canvas></div></div>
+<div class="sub" id="model"></div>
+
+<h2 id="pl">Priority list</h2>
+<div class="grid split"><div class="card"><div class="tool"><select id="fc" onchange="GF=this.value;table()"></select><span id="bn"></span><span class="m" id="cnt"></span></div><div class="sc"><table id="tb"></table></div></div>
+<div class="card" id="dt" style="align-self:start;position:sticky;top:70px"></div></div>
+</section>
+</main>
+<script src="data/sample.js"></script><script src="data/india.js"></script><script src="app.js"></script>
+</body></html>
