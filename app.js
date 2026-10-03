@@ -138,7 +138,7 @@ cv.addEventListener('wheel',e=>{e.preventDefault();R3.zoom=Math.max(.5,Math.min(
 /* ---------- video ---------- */
 let VID_URL=null;
 function loadVid(inp){const f=inp.files[0];if(!f)return;VID_URL=URL.createObjectURL(f);$('vid-name').textContent=f.name;$('vid-dl').hidden=false;$('video').innerHTML=`<video src="${VID_URL}" controls style="width:100%;height:100%;border-radius:18px;background:#000"></video>`}
-function dlVid(){if(!VID_URL)return;const a=document.createElement('a');a.href=VID_URL;a.download='dealer-assess-presentation.mp4';a.click()}
+function dlVid(){if(!VID_URL)return;const a=document.createElement('a');a.href=VID_URL;a.download='dealer-access-presentation.mp4';a.click()}
 function loadEmbed(url){if(!url)return;$('video').innerHTML=`<iframe src="${url}" allowfullscreen style="width:100%;height:100%;border:0;border-radius:18px"></iframe>`;$('vid-dl').hidden=true;$('vid-name').textContent=''}
 
 /* ---------- export CSV ---------- */
@@ -150,7 +150,7 @@ const body=rows.map((d,i)=>[i+1,d.id,d.name,d.region,d.pot,META[d.cl][0],d.score
 const csv=[hdr,...body].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
 const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
 const region=MODE=='region'?`_${REG}`:'';const filter=KF!='all'?`_${KPI.find(k=>k[0]==KF)[1].replace(/ /g,'-')}`:'';
-a.download=`dealer-assess-priority${region}${filter}.csv`;a.click()}
+a.download=`dealer-access-priority${region}${filter}.csv`;a.click()}
 
 theme();
 load(SEED,'Sample dataset');
