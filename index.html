@@ -1,20 +1,25 @@
 <!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dealer Assess – Dealer Health &amp; Priority Prototype</title>
+<title>Dealer Access – Dealer Health &amp; Priority Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>try{var t=localStorage.getItem("da-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="style.css"></head><body>
-<nav><b>● Dealer Assess</b><span style="flex:1"></span><div class="tabs"><button id="t0" class="on" onclick="go(0)">Approach</button><button id="t1" onclick="go(1)">Prototype</button></div><button class="tg" id="th" onclick="toggleTheme()"></button></nav>
+<nav><b>● Dealer Access</b><span style="flex:1"></span><div class="tabs"><button id="t0" class="on" onclick="go(0)">Approach</button><button id="t1" onclick="go(1)">Prototype</button></div><button class="tg" id="th" onclick="toggleTheme()"></button></nav>
 <main>
 <!-- ============ SECTION 1: APPROACH ============ -->
 <section class="page on" id="p0">
 <div class="eyebrow">Business Analyst Case Study</div><h1>Which dealers need<br>management attention?</h1>
-<p class="lead">Dealer Assess reads monthly dealer data, uses clustering to discover hidden performance patterns, and gives regional managers a ranked list: <b>who</b> needs attention, <b>why</b>, and <b>what to do first</b>.</p>
+<p class="lead">Dealer Access reads monthly dealer data, uses clustering to discover hidden performance patterns, and gives regional managers a ranked list: <b>who</b> needs attention, <b>why</b>, and <b>what to do first</b>.</p>
 <p><button class="btn" onclick="go(1)">Go to the deployed solution →</button></p>
 <p class="m">The working prototype is in the next section (“Prototype” tab above).</p>
 
 <h2>Presentation</h2>
-<div class="video" id="video"><div><div style="font-size:42px">▶</div>Video presentation coming soon</div></div>
-<!-- To add: replace the inner HTML above with <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
+<div class="video" id="video"><div><div style="font-size:42px">▶</div><p style="margin:8px 0 0;font-size:14px;color:#98989d">Upload your recorded MP4 below to preview and share it here</p></div></div>
+<div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <label class="btn" style="cursor:pointer">Upload MP4 <input type="file" id="vid-upload" accept="video/mp4,video/*" hidden onchange="loadVid(this)"></label>
+  <button class="btn s" id="vid-dl" hidden onclick="dlVid()">↓ Download MP4</button>
+  <span class="m" id="vid-name" style="font-size:13px"></span>
+</div>
+<p class="m" style="font-size:12.5px;margin-top:8px">Alternatively paste a YouTube / Vimeo embed URL: <input id="vid-url" type="url" placeholder="https://www.youtube.com/embed/VIDEO_ID" style="width:360px;margin-left:6px" onchange="loadEmbed(this.value)"></p>
 
 <h2>How the solution works</h2>
 <div class="grid g4">
@@ -73,7 +78,7 @@
 
 <h2 id="pl">Priority list</h2>
 <details class="note"><summary>ⓘ How the priority score is calculated</summary><p>Each metric is compared with the network average. Only deviations in the wrong direction add points (low sales, ageing stock, late payments, weak service, more complaints, slowing momentum). The total is multiplied by market potential (High ×1.25, Medium ×1, Low ×0.85) and scaled so the worst dealer scores 100. A score of 55+ or a Critical group means “need action now”.</p></details>
-<div class="grid split"><div class="card"><div class="tool"><select id="fc" onchange="GF=this.value;table()"></select><span id="bn"></span><span class="m" id="cnt"></span></div><div class="sc"><table id="tb"></table></div></div>
+<div class="grid split"><div class="card"><div class="tool"><select id="fc" onchange="GF=this.value;table()"></select><span id="bn"></span><span class="m" id="cnt"></span><button class="btn s" style="margin-left:auto" onclick="exportCSV()">↓ Export CSV</button></div><div class="sc"><table id="tb"></table></div></div>
 <div class="card" id="dt" style="align-self:start;position:sticky;top:70px"></div></div>
 </section>
 </main>
