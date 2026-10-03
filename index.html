@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dealer Access – Dealer Health &amp; Priority Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link rel="stylesheet" href="style.css"></head><body>
-<nav><b>● Dealer Access</b><div class="tabs"><button id="t0" class="on" onclick="go(0)">Approach</button><button id="t1" onclick="go(1)">Prototype</button></div></nav>
+<script>try{var t=localStorage.getItem("da-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="style.css"></head><body>
+<nav><b>● Dealer Access</b><span style="flex:1"></span><div class="tabs"><button id="t0" class="on" onclick="go(0)">Approach</button><button id="t1" onclick="go(1)">Prototype</button></div><button class="tg" id="th" onclick="toggleTheme()"></button></nav>
 <main>
 <!-- ============ SECTION 1: APPROACH ============ -->
 <section class="page on" id="p0">
@@ -23,6 +23,7 @@
 <div class="card"><div class="num">3</div><h3>Cluster</h3><span class="m">K-means groups dealers by similar behaviour, so patterns surface that no single metric shows.</span></div>
 <div class="card"><div class="num">4</div><h3>Prioritise</h3><span class="m">A risk score weighted by market potential ranks dealers, explains drivers and suggests actions.</span></div></div>
 
+<div class="sub" style="margin-top:20px"><div><small>Priority score in short</small><p>A 0–100 number showing how urgently a dealer needs attention.</p></div><div><small>1 · Compare</small><p>Each metric is compared with the network average.</p></div><div><small>2 · Count only the bad</small><p>Only deviations in the wrong direction add points: low sales, ageing stock, late payments, weak service, more complaints, slowing momentum.</p></div><div><small>3 · Weight and scale</small><p>Points are multiplied by market potential (High ×1.25, Medium ×1, Low ×0.85) and scaled so the worst dealer scores 100. 55+ or a Critical group means “act now”.</p></div></div>
 <h2>Assumptions</h2>
 <div class="grid g2"><div class="card"><h3>Data</h3><ul>
 <li>The manufacturer’s dealer network is in India, split into five regions: North, South, East, West and Central.</li>
@@ -64,14 +65,14 @@
 <div class="grid g4" style="margin-top:16px" id="kpis"></div>
 
 <div class="grid g2" style="margin-top:24px;grid-template-columns:repeat(auto-fit,minmax(480px,1fr))">
-<div class="card mapc"><h3>Dealer network map</h3><button class="btn s back" id="back" hidden onclick="setMode('all')">← All India</button><svg id="mp" preserveAspectRatio="xMidYMid meet"></svg><div class="nomap" id="nomap" hidden>Add Latitude and Longitude columns to see the map.</div><div class="mapov" id="lg"></div></div>
-<div class="card"><h3>Sales vs target against inventory ageing</h3><div class="cv" style="height:520px"><canvas id="c1"></canvas></div></div>
-<div class="card"><h3>What defines each group (std. deviations vs network)</h3><div class="cv"><canvas id="c2"></canvas></div></div>
+<div class="card mapc" id="mapcard"><h3>Dealer network map</h3><button class="btn s back" id="back" hidden onclick="setMode('all')">← All India</button><svg id="mp" preserveAspectRatio="xMidYMid meet"></svg><div class="mapov" id="lg"></div></div>
+<div class="card col3"><h3>Dealer status in 3D</h3><div class="axr"><label>X <select id="ax0"></select></label><label>Y <select id="ax1"></select></label><label>Depth <select id="ax2"></select></label><button class="btn s sm" onclick="R3.auto=!R3.auto">⟳ Auto-rotate</button></div><div class="c3w"><canvas id="c3d"></canvas><div id="tip3"></div></div><p class="hint">Colour = status group · drag to rotate · scroll to zoom · click a dealer for details</p></div>
+<div class="card"><h3>What drives criticality</h3><p class="m" style="margin:-4px 0 6px;font-size:12.5px">Average points each factor adds to a dealer’s priority score, by group</p><div class="cv"><canvas id="c2"></canvas></div></div>
 <div class="card"><h3 id="t3"></h3><div class="cv"><canvas id="c3"></canvas></div></div></div>
-<div class="card" style="margin-top:16px"><h3>Average sales vs target by group, month by month</h3><div class="cv" style="height:340px"><canvas id="c5"></canvas></div></div>
 <div class="sub" id="model"></div>
 
 <h2 id="pl">Priority list</h2>
+<details class="note"><summary>ⓘ How the priority score is calculated</summary><p>Each metric is compared with the network average. Only deviations in the wrong direction add points (low sales, ageing stock, late payments, weak service, more complaints, slowing momentum). The total is multiplied by market potential (High ×1.25, Medium ×1, Low ×0.85) and scaled so the worst dealer scores 100. A score of 55+ or a Critical group means “need action now”.</p></details>
 <div class="grid split"><div class="card"><div class="tool"><select id="fc" onchange="GF=this.value;table()"></select><span id="bn"></span><span class="m" id="cnt"></span></div><div class="sc"><table id="tb"></table></div></div>
 <div class="card" id="dt" style="align-self:start;position:sticky;top:70px"></div></div>
 </section>
