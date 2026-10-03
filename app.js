@@ -1,4 +1,4 @@
-/* Dealer Access – clustering, scoring, map and UI (vanilla JS) */
+/* Dealer Assess – clustering, scoring, map and UI (vanilla JS) */
 const REQ=['Dealer_ID','Dealer_Name','Region','Month','Sales_vs_Target_Percent','Sales_Growth_Percent','Inventory_Ageing_Percent','Payment_Delay_Days','Service_Performance_Percent','Customer_Complaints_Count','Local_Market_Potential'];
 const F=['sales','growth','inv','delay','svc','comp','trend'];
 const L={sales:'Sales vs target',growth:'Sales growth',inv:'Inventory ageing',delay:'Payment delay',svc:'Service score',comp:'Complaints',trend:'Sales momentum'};
