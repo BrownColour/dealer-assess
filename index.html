@@ -13,13 +13,10 @@
 <p class="m">The working prototype is in the next section (“Prototype” tab above).</p>
 
 <h2>Presentation</h2>
-<div class="video" id="video"><div><div style="font-size:42px">▶</div><p style="margin:8px 0 0;font-size:14px;color:#98989d">Upload your recorded MP4 below to preview and share it here</p></div></div>
-<div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-  <label class="btn" style="cursor:pointer">Upload MP4 <input type="file" id="vid-upload" accept="video/mp4,video/*" hidden onchange="loadVid(this)"></label>
-  <button class="btn s" id="vid-dl" hidden onclick="dlVid()">↓ Download MP4</button>
-  <span class="m" id="vid-name" style="font-size:13px"></span>
+<div class="video" id="video"><video src="data/presentation.mp4" controls style="width:100%;height:100%;border-radius:18px;background:#000"></video></div>
+<div style="margin-top:14px">
+  <button class="btn s" onclick="dlVid()">↓ Download MP4</button>
 </div>
-<p class="m" style="font-size:12.5px;margin-top:8px">Alternatively paste a YouTube / Vimeo embed URL: <input id="vid-url" type="url" placeholder="https://www.youtube.com/embed/VIDEO_ID" style="width:360px;margin-left:6px" onchange="loadEmbed(this.value)"></p>
 
 <h2>How the solution works</h2>
 <div class="grid g4">

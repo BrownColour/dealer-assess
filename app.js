@@ -1,4 +1,4 @@
-/* Dealer Assess – clustering, scoring, map and UI (vanilla JS) */
+/* Dealer Access – clustering, scoring, map and UI (vanilla JS) */
 const REQ=['Dealer_ID','Dealer_Name','Region','Month','Sales_vs_Target_Percent','Sales_Growth_Percent','Inventory_Ageing_Percent','Payment_Delay_Days','Service_Performance_Percent','Customer_Complaints_Count','Local_Market_Potential'];
 const F=['sales','growth','inv','delay','svc','comp','trend'];
 const L={sales:'Sales vs target',growth:'Sales growth',inv:'Inventory ageing',delay:'Payment delay',svc:'Service score',comp:'Complaints',trend:'Sales momentum'};
@@ -136,10 +136,7 @@ cv.onpointerup=e=>{const was=R3.drag;R3.drag=null;if(was&&R3.moved<4){const[f]=h
 cv.onpointerleave=()=>{R3.hover=null;tip.style.display='none'};
 cv.addEventListener('wheel',e=>{e.preventDefault();R3.zoom=Math.max(.5,Math.min(2.5,R3.zoom*(e.deltaY<0?1.08:.92)))},{passive:false})})();
 /* ---------- video ---------- */
-let VID_URL=null;
-function loadVid(inp){const f=inp.files[0];if(!f)return;VID_URL=URL.createObjectURL(f);$('vid-name').textContent=f.name;$('vid-dl').hidden=false;$('video').innerHTML=`<video src="${VID_URL}" controls style="width:100%;height:100%;border-radius:18px;background:#000"></video>`}
-function dlVid(){if(!VID_URL)return;const a=document.createElement('a');a.href=VID_URL;a.download='dealer-access-presentation.mp4';a.click()}
-function loadEmbed(url){if(!url)return;$('video').innerHTML=`<iframe src="${url}" allowfullscreen style="width:100%;height:100%;border:0;border-radius:18px"></iframe>`;$('vid-dl').hidden=true;$('vid-name').textContent=''}
+function dlVid(){const a=document.createElement('a');a.href='data/presentation.mp4';a.download='dealer-assess-presentation.mp4';a.click()}
 
 /* ---------- export CSV ---------- */
 function exportCSV(){if(!S)return;
@@ -148,9 +145,9 @@ const rows=V.filter(d=>f(d)&&(GF===''||d.cl==GF)).sort((a,b)=>b.score-a.score);
 const hdr=['Rank','Dealer_ID','Dealer_Name','Region','Market_Potential','Group','Priority_Score','Emerging_Concern',...F.map(k=>L[k]),'Top_Drivers','Recommended_Actions'];
 const body=rows.map((d,i)=>[i+1,d.id,d.name,d.region,d.pot,META[d.cl][0],d.score,d.emerging?'Yes':'No',...F.map(k=>d.f[k].toFixed(1)),d.why.map(k=>L[k]).join('; '),d.why.map(k=>ACT[k]).join(' | ')]);
 const csv=[hdr,...body].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
-const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
 const region=MODE=='region'?`_${REG}`:'';const filter=KF!='all'?`_${KPI.find(k=>k[0]==KF)[1].replace(/ /g,'-')}`:'';
-a.download=`dealer-access-priority${region}${filter}.csv`;a.click()}
+a.download=`dealer-assess-priority${region}${filter}.csv`;a.click()}
 
 theme();
 load(SEED,'Sample dataset');
